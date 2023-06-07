@@ -38,7 +38,8 @@ if ($null -eq $arrService) {
         #rename config file
         Rename-Item -Path "$zabbixConfig\zabbix_agent2.conf" -NewName "zabbix_agent2.conf.old"
         Write-Host "Renamed config file to zabbix_agent2.conf.old" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "Config file not found" -ForegroundColor Red
     }
 
@@ -48,7 +49,8 @@ if ($null -eq $arrService) {
         #rename config file
         Rename-Item -Path "$zabbixConfig\zabbix_agent2.win.conf" -NewName "zabbix_agent2.win.conf.old"
         Write-Host "Renamed config file to zabbix_agent2.win.conf.old" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "Config file not found" -ForegroundColor Red
     }
 
@@ -70,11 +72,13 @@ if ($null -eq $arrService) {
 
         if ($arrService.Status -eq "Running") {
             Write-Host "Service $ServiceName is running" -ForegroundColor Green
-        } else {
+        }
+        else {
             Write-Host "Service $ServiceName is not running" -ForegroundColor Red
         }
 
-    } else {
+    }
+    else {
         Write-Host "Service $ServiceName is not running" -ForegroundColor Red
     }
 
@@ -82,13 +86,15 @@ if ($null -eq $arrService) {
     
 
     exit
-} else {
+}
+else {
     Write-Host "Service $ServiceName found" -ForegroundColor Green
     #stop service
     if ($arrService.Status -eq "Running") {
         Write-Host "Stopping service $ServiceName" -ForegroundColor Green
         Stop-Service -Name $ServiceName
-    } else {
+    }
+    else {
         Write-Host "Service $ServiceName is not running" -ForegroundColor Yellow
     }
 }
@@ -96,14 +102,27 @@ if ($null -eq $arrService) {
 #write-host path to config
 Write-Host "Path to config: $zabbixConfig" -ForegroundColor Green
 
+
+#START OF CONFIG FILE CHECK
 #check to see if config file exists
 if (Test-Path -Path "$zabbixConfig\zabbix_agent2.conf") {
     Write-Host "Config file found" -ForegroundColor Green
     #rename config file
     #TODO: - check if file exists
+
+    #check if zabbix_agent2.conf.old exists if it does, delete it first then rename the current config file
+    if (Test-Path -Path "$zabbixConfig\zabbix_agent2.conf.old") {
+        Write-Host "Config file found" -ForegroundColor Green
+        #delete current config file
+        Remove-Item -Path "$zabbixConfig\zabbix_agent2.conf.old"
+        Write-Host "Deleted config file zabbix_agent2.conf.old" -ForegroundColor Yellow
+    }
+
+
     Rename-Item -Path "$zabbixConfig\zabbix_agent2.conf" -NewName "zabbix_agent2.conf.old"
     Write-Host "Renamed config file to zabbix_agent2.conf.old" -ForegroundColor Yellow
-} else {
+}
+else {
     Write-Host "Config file not found" -ForegroundColor Red
 }
 
@@ -115,18 +134,31 @@ Invoke-WebRequest -Uri $configDownloadLink -OutFile "$zabbixConfig\zabbix_agent2
 #check to see if config file exists
 if (Test-Path -Path "$zabbixConfig\zabbix_agent2.conf") {
     Write-Host "Config file downloaded" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "Config file not downloaded" -ForegroundColor Red
 }
 
+
+#START OF WIN CONFIG FILE CHECK
 #check to see if config file exists
 if (Test-Path -Path "$zabbixConfig\zabbix_agent2.win.conf") {
     Write-Host "Config file found" -ForegroundColor Green
     #rename config file
     #TODO: - check if file exists
+
+    if (Test-Path -Path "$zabbixConfig\zabbix_agent2.win.conf.old") {
+        Write-Host "Config file found" -ForegroundColor Green
+        #delete current config file
+        Remove-Item -Path "$zabbixConfig\zabbix_agent2.win.conf.old"
+        Write-Host "Deleted config file zabbix_agent2.win.conf.old" -ForegroundColor Yellow
+    }
+
+
     Rename-Item -Path "$zabbixConfig\zabbix_agent2.win.conf" -NewName "zabbix_agent2.win.conf.old"
     Write-Host "Renamed config file to zabbix_agent2.win.conf.old" -ForegroundColor Yellow
-} else {
+}
+else {
     Write-Host "Config file not found" -ForegroundColor Red
 }
 
@@ -139,7 +171,8 @@ Invoke-WebRequest -Uri $winConfigDownloadLink -OutFile "$zabbixConfig\zabbix_age
 
 if (Test-Path -Path "$zabbixConfig\zabbix_agent2.win.conf") {
     Write-Host "Config file downloaded" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "Config file not downloaded" -ForegroundColor Red
 }
 
@@ -152,6 +185,7 @@ $arrService = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
 
 if ($arrService.Status -eq "Running") {
     Write-Host "Service $ServiceName is running" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "Service $ServiceName is not running" -ForegroundColor Red
 }
