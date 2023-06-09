@@ -129,7 +129,7 @@ if ($Reply.status -eq "Success") {
             #download the Zabbix Agent 2 installer from zabbix server and install it
 
        
-            Invoke-Command -Session $session -ScriptBlock { Start-Process -FilePath "C:\zabbix_agent2-6.4.3-windows-amd64-openssl.msi" -ArgumentList "/quiet" -Wait }
+            #Invoke-Command -Session $session -ScriptBlock { Start-Process -FilePath "C:\zabbix_agent2-6.4.3-windows-amd64-openssl.msi" -ArgumentList "/quiet" -Wait }
 
 
         }
