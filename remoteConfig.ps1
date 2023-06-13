@@ -22,6 +22,7 @@ if ($Reply.status -eq "Success") {
     Write-Host "The computer is online"
 
     
+    
 
     $session = New-PSSession -ComputerName $computer -Credential $username 
     
