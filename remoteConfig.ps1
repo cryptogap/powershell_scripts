@@ -4,6 +4,10 @@ $computer = Read-Host "Enter the computer name"
 
 $username = Read-Host "Enter the username"
 
+$password = Read-Host "Enter the password" -AsSecureString
+
+$credentials = New-Object System.Management.Automation.PSCredential($username, $password)
+
 $win_config = "\\fbcaddata\Company\Department\Technology\Zabbix\configFiles\zabbix_agent2.win.conf"
 
 $config = "\\fbcaddata\Company\Department\Technology\Zabbix\configFiles\zabbix_agent2.conf"
@@ -22,9 +26,11 @@ if ($Reply.status -eq "Success") {
     Write-Host "The computer is online"
 
     
+    .\psexec64.exe -s \\$computer -u "fbcad\garrettpost" -p "F61ac5b57e0911!!" powershell.exe Enable-PSRemoting -Force
+
     
 
-    $session = New-PSSession -ComputerName $computer -Credential $username 
+    $session = New-PSSession -ComputerName $computer -Credential $credentials -ConfigurationName Microsoft.PowerShell32 
     
 
     #check if the session is open
