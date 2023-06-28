@@ -1,0 +1,7 @@
+Applications:
+  - Name: App1
+    Path: \\admin-it\install$\Notepad++\npp.8.5.4.Installer.x64.exe
+    Arguments: '/silent /norestart'
+  # - Name: App2
+  #   Path: C:\Path\to\App2.msi
+  #   Arguments: '/quiet /qn'
