@@ -26,10 +26,12 @@ Write-Host "Testing if Symantec Endpoint Protection is installed on this compute
 if (Test-Path $symantec86) {
     $symantecPath = $symantec86
     Write-Host "Symantec Endpoint Protection x86 is installed on this computer."
-} elseif (Test-Path $symantec64) {
+}
+elseif (Test-Path $symantec64) {
     $symantecPath = $symantec64
     Write-Host "Symantec Endpoint Protection x64 is installed on this computer."
-} else {
+}
+else {
     $messageBody = "User: $user`nComputer: $computerName`nDate: $date`n`n Symantec Endpoint Protection is not installed on this computer."
 
 
@@ -37,7 +39,7 @@ if (Test-Path $symantec86) {
     Write-Host "Writing to log file..." -ForegroundColor Blue
     Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection is not installed on $computerName."
     Write-Host "Sending email to $smtpTo..." -ForegroundColor Yellow
-   #send an email to the helpdesk
+    #send an email to the helpdesk
     Send-MailMessage -From $smtpFrom -To $smtpTo -Subject $messageSubject -Body $messageBody -SmtpServer $smtpServer -Port $smtpPort -DeliveryNotificationOption OnSuccess -Priority High
     return
 }
@@ -52,26 +54,30 @@ else {
 
 
 
-    #if it exists, run the update command
-    Write-Host "Symantec Endpoint Protection is installed on this computer."
-    #append to log file
-    Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection is installed on $computerName."
-    #run exe file to update definitions
-    & "$symantecPath\SepLiveUpdate.exe"
+#if it exists, run the update command
+Write-Host "Symantec Endpoint Protection is installed on this computer."
+#append to log file
+Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection is installed on $computerName."
+#run exe file to update definitions
+& "$symantecPath\SepLiveUpdate.exe"
 
-    #check if update was successful
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "Symantec Endpoint Protection definitions were updated successfully."
-        Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection definitions were updated successfully on $computerName."
-    }
-    else {
-        $messageBody = "User: $user`nComputer: $computerName`nDate: $date`n`n Symantec Endpoint Protection was not updated successfully."
+#check if update was successful
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "Symantec Endpoint Protection definitions were updated successfully."
+    Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection definitions were updated successfully on $computerName."  
+    $messageBody = "User: $user`nComputer: $computerName`nDate: $date`n`n Symantec Endpoint Protection definitions were updated successfully."
+
+    Send-MailMessage -From $smtpFrom -To $smtpTo -Subject $messageSubject -Body $messageBody -SmtpServer $smtpServer -Port $smtpPort -DeliveryNotificationOption OnSuccess -Priority High
+
+}
+else {
+    $messageBody = "User: $user`nComputer: $computerName`nDate: $date`n`n Symantec Endpoint Protection was not updated successfully."
 
 
-        Write-Host "Symantec Endpoint Protection definitions were not updated successfully."
-        Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection definitions were not updated successfully on $computerName."
-        Send-MailMessage -From $smtpFrom -To $smtpTo -Subject $messageSubject -Body $messageBody + -SmtpServer $smtpServer -Port $smtpPort -DeliveryNotificationOption OnSuccess -Priority High
-    }
+    Write-Host "Symantec Endpoint Protection definitions were not updated successfully."
+    Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection definitions were not updated successfully on $computerName."
+    Send-MailMessage -From $smtpFrom -To $smtpTo -Subject $messageSubject -Body $messageBody + -SmtpServer $smtpServer -Port $smtpPort -DeliveryNotificationOption OnSuccess -Priority High
+}
 
 
 
