@@ -12,6 +12,7 @@ $win_config = "\\fbcaddata\Company\Department\Technology\Zabbix\configFiles\zabb
 
 $config = "\\fbcaddata\Company\Department\Technology\Zabbix\configFiles\zabbix_agent2.conf"
 
+# ------------ DO NOT EDIT BELOW HERE ---------- #
 
 #ping the computer to see if it is online
 
