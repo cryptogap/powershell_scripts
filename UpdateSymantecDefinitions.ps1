@@ -2,6 +2,7 @@
 $symantec86 = "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection"
 $symantec64 = "C:\Program Files\Symantec\Symantec Endpoint Protection"
 $logPath = "\\192.1.2.210\GeneralShare\Logs\Symantec\UpdateLog.txt"
+$installerPath = "\\admin-it\install$\Symantec\Symantec Endpoint Security 14\Symantec_Endpoint_Protection_14.3.0_RU6_Win64-bit_Client_EN.exe"
 
 $date = Get-Date -Format "MM/dd/yyyy HH:mm:ss"
 $computerName = $env:COMPUTERNAME
@@ -38,6 +39,26 @@ else {
     Write-Host "Symantec Endpoint Protection is not installed on this computer." -ForegroundColor Red
     Write-Host "Writing to log file..." -ForegroundColor Blue
     Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection is not installed on $computerName."
+
+    Write-Host "Attempting to install Symantec Endpoint Protection..." -ForegroundColor Yellow
+    #install Symantec Endpoint Protection as administrator in the background, wait for it to finish
+    Start-Process -FilePath $installerPath -ArgumentList "/s" -Wait -PassThru -Verb RunAs
+
+
+    #check if install was successful
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "Symantec Endpoint Protection was installed successfully." -ForegroundColor Green
+        Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection was installed successfully on $computerName."
+        $messageBody = "User: $user`nComputer: $computerName`nDate: $date`n`n Symantec Endpoint Protection was installed successfully."
+        Send-MailMessage -From $smtpFrom -To $smtpTo -Subject $messageSubject -Body $messageBody -SmtpServer $smtpServer -Port $smtpPort -DeliveryNotificationOption OnSuccess -Priority High
+    }
+    else {
+        Write-Host "Symantec Endpoint Protection was not installed successfully." -ForegroundColor Red
+        Add-Content -Path $logPath -Value "Date: $date - Symantec Endpoint Protection was not installed successfully on $computerName."
+        $messageBody = "User: $user`nComputer: $computerName`nDate: $date`n`n Symantec Endpoint Protection was not installed successfully."
+        Send-MailMessage -From $smtpFrom -To $smtpTo -Subject $messageSubject -Body $messageBody -SmtpServer $smtpServer -Port $smtpPort -DeliveryNotificationOption OnSuccess -Priority High
+    }
+
     Write-Host "Sending email to $smtpTo..." -ForegroundColor Yellow
     #send an email to the helpdesk
     Send-MailMessage -From $smtpFrom -To $smtpTo -Subject $messageSubject -Body $messageBody -SmtpServer $smtpServer -Port $smtpPort -DeliveryNotificationOption OnSuccess -Priority High
