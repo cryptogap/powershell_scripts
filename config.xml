@@ -1,0 +1,36 @@
+<config>
+  <!-- Folding Core -->
+  <checkpoint v='10'/>
+  <cpu-usage v='100'/>
+  <core-priority v='idle'>
+  <gpu v='false'>
+
+  <!-- Folding Slot Configuration -->
+  <client-type v='advanced'/>
+  <extra-core-args v='  -service   '/>
+
+  <!-- HTTP Server -->
+  <http-addresses v='127.0.0.1:7396'/>
+  <open-web-control v='false'>
+  <gui-enabled v='false'>
+
+  <!-- Slot Control -->
+  <power v='FULL'/>
+
+  <!-- User Information -->
+  <fold-anon v='false'>
+  <passkey v='e161c3f9fd05e690e161c3f9fd05e690'/>
+  <team v='234980'/>
+  <user v='tn0ylo8878up'/>
+
+  <!-- Folding Slots -->
+  <slot id='2' type='CPU'/>
+
+  <!-- Sleep Settings -->
+  <disable-sleep-when-active v='true'>
+
+  <!-- Exit settings -->
+  <exit-when-done v='false'>
+
+
+</config>
